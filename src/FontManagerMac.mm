@@ -107,6 +107,10 @@ long FontManagerImpl::getAvailableFonts(ResultSet **resultSet) {
 
   *resultSet = new ResultSet;
   for (id m in matches) {
+    NSString *family = (NSString *) CTFontDescriptorCopyAttribute((CTFontDescriptorRef) m, kCTFontFamilyNameAttribute);
+    if (family == NULL) {
+      continue;
+    }
     CTFontDescriptorRef match = (CTFontDescriptorRef) m;
     FontDescriptor *fontDescriptor;
     long error = createFontDescriptor(&fontDescriptor, match);
@@ -200,6 +204,10 @@ long FontManagerImpl::findFonts(ResultSet** fonts, FontDescriptor *desc) {
 
   *fonts = new ResultSet;
   for (id m in sorted) {
+    NSString *family = (NSString *) CTFontDescriptorCopyAttribute((CTFontDescriptorRef) m, kCTFontFamilyNameAttribute);
+    if (family == NULL) {
+      continue;
+    }
     CTFontDescriptorRef match = (CTFontDescriptorRef) m;
     int mb = metricForMatch((CTFontDescriptorRef) m, desc);
 
@@ -223,6 +231,10 @@ CTFontDescriptorRef findBest(FontDescriptor *desc, NSArray *matches) {
   int bestMetric = INT_MAX;
 
   for (id m in matches) {
+    NSString *family = (NSString *) CTFontDescriptorCopyAttribute((CTFontDescriptorRef) m, kCTFontFamilyNameAttribute);
+    if (family == NULL) {
+      continue;
+    }
     int metric = metricForMatch((CTFontDescriptorRef) m, desc);
 
     if (metric < bestMetric) {
